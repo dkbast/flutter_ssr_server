@@ -187,6 +187,10 @@ Future<Response> _ssrHandler(Request request) async {
     ));
   }
 
+  // This is necessary to ensure that the frame is drawn even if the
+  // server is in the background
+  WidgetsBinding.instance.drawFrame();
+
   final Uint8List? testImg =
       await imageService.renderWidget(int.parse(width), int.parse(height));
 
