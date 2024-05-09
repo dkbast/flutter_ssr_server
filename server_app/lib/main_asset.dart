@@ -1,7 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
@@ -43,7 +48,7 @@ void main() async {
   print('Web at http://${webserver.address.host}:${webserver.port}');
   print('Api at http://${server.address.host}:${server.port}/ssr');
 
-  runApp(const MaterialApp(home: Scaffold(body: MainApp())));
+  runApp(const MaterialApp(home: Scaffold(body: Center(child: MainApp()))));
 }
 
 class DemoWidget extends StatelessWidget {
@@ -93,8 +98,15 @@ class _MainAppState extends State<MainApp> {
       if (result == null) throw Exception('Failed to capture screenshot');
       return result;
       /*
-       *final result = await screenshotController.captureFromWidget(
-       *    InheritedTheme.captureAll(context, DemoWidget(text: text)));
+       *final result = await screenshotController
+       *    .captureFromWidget(InheritedTheme.captureAll(
+       *        context,
+       *        InteractiveViewer(
+       *          child: SizedBox(
+       *              width: width.toDouble(),
+       *              height: height.toDouble(),
+       *              child: DemoWidget(text: '42')),
+       *        )));
        *return result;
        */
     };
@@ -102,12 +114,15 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width.toDouble(),
-      height: height.toDouble(),
+    return InteractiveViewer(
+      constrained: false,
       child: Screenshot(
         controller: screenshotController,
-        child: DemoWidget(key: key, text: '42'),
+        child: SizedBox(
+          width: width.toDouble(),
+          height: height.toDouble(),
+          child: DemoWidget(key: key, text: '42'),
+        ),
       ),
     );
   }
@@ -154,7 +169,7 @@ final _watch = Stopwatch();
 
 Future<Response> _ssrHandler(Request request) async {
   final width = request.url.queryParameters['width'] ?? '800';
-  final height = request.url.queryParameters['width'] ?? '800';
+  final height = request.url.queryParameters['height'] ?? '800';
   final Uint8List? testImg =
       await imageService.renderWidget(int.parse(width), int.parse(height));
 
