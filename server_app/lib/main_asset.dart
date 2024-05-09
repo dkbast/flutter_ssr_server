@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -78,8 +79,6 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-GlobalKey key = GlobalKey();
-
 class _MainAppState extends State<MainApp> {
   int width = 800;
   int height = 800;
@@ -121,12 +120,16 @@ class _MainAppState extends State<MainApp> {
         child: SizedBox(
           width: width.toDouble(),
           height: height.toDouble(),
-          child: DemoWidget(key: key, text: '42'),
+          child: Counter(
+            key: counterKey,
+          ),
         ),
       ),
     );
   }
 }
+
+final counterKey = GlobalKey();
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -170,6 +173,20 @@ final _watch = Stopwatch();
 Future<Response> _ssrHandler(Request request) async {
   final width = request.url.queryParameters['width'] ?? '800';
   final height = request.url.queryParameters['height'] ?? '800';
+  final x = double.tryParse(request.url.queryParameters['x'] ?? '');
+  final y = double.tryParse(request.url.queryParameters['y'] ?? '');
+
+  print('SSR: $width x $height at $x, $y');
+  if (x != null && y != null) {
+    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+      position: Offset(x, y),
+    ));
+    await Future.delayed(const Duration(milliseconds: 50));
+    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+      position: Offset(x, y),
+    ));
+  }
+
   final Uint8List? testImg =
       await imageService.renderWidget(int.parse(width), int.parse(height));
 
@@ -185,4 +202,48 @@ Future<Response> _ssrHandler(Request request) async {
     body: testImg,
   );
   return response;
+}
+
+class Counter extends StatefulWidget {
+  const Counter({
+    super.key,
+  });
+
+  @override
+  State<Counter> createState() => _CounterState();
+}
+
+class _CounterState extends State<Counter> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
 }
