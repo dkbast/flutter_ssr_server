@@ -62,7 +62,7 @@ class DemoWidget extends StatelessWidget {
           border: Border.all(color: Colors.blueAccent, width: 5.0),
           color: Colors.redAccent,
         ),
-        child: Text("This is an invisible widget $text"));
+        child: Text("This is my demo widget $text"));
   }
 }
 
@@ -73,23 +73,42 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
+GlobalKey key = GlobalKey();
+
 class _MainAppState extends State<MainApp> {
+  int width = 800;
+  int height = 800;
+
   //Create an instance of ScreenshotController
   ScreenshotController screenshotController = ScreenshotController();
   @override
   void initState() {
     super.initState();
-    imageService.renderWidgetCallback = (String text) async {
-      final result = await screenshotController.captureFromWidget(
-          InheritedTheme.captureAll(context, DemoWidget(text: text)));
+    imageService.renderWidgetCallback = (int width, int height) async {
+      setState(() {
+        this.width = width;
+        this.height = height;
+      });
+      final result = await screenshotController.capture();
+      if (result == null) throw Exception('Failed to capture screenshot');
       return result;
+      /*
+       *final result = await screenshotController.captureFromWidget(
+       *    InheritedTheme.captureAll(context, DemoWidget(text: text)));
+       *return result;
+       */
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: DemoWidget(text: '42'),
+    return SizedBox(
+      width: width.toDouble(),
+      height: height.toDouble(),
+      child: Screenshot(
+        controller: screenshotController,
+        child: DemoWidget(key: key, text: '42'),
+      ),
     );
   }
 }
@@ -123,10 +142,10 @@ class _MyHomePageState extends State<MyHomePage> {
 /// singleton which can request a screenshot from the flutter app and returns
 /// an image to an enpoint
 class ImageService {
-  Future<Uint8List> Function(String text)? renderWidgetCallback;
+  Future<Uint8List> Function(int width, int height)? renderWidgetCallback;
 
-  Future<Uint8List?> renderWidget(String text) async {
-    final result = await renderWidgetCallback?.call(text);
+  Future<Uint8List?> renderWidget(int width, int height) async {
+    final result = await renderWidgetCallback?.call(width, height);
     return result;
   }
 }
@@ -134,7 +153,10 @@ class ImageService {
 final _watch = Stopwatch();
 
 Future<Response> _ssrHandler(Request request) async {
-  final Uint8List? testImg = await imageService.renderWidget('42');
+  final width = request.url.queryParameters['width'] ?? '800';
+  final height = request.url.queryParameters['width'] ?? '800';
+  final Uint8List? testImg =
+      await imageService.renderWidget(int.parse(width), int.parse(height));
 
   if (testImg == null) return Response.internalServerError();
 
