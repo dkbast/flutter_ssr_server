@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -23,31 +25,39 @@ class ImageService {
 final imageService = ImageService();
 
 void main() async {
-  // If the "PORT" environment variable is set, listen to it. Otherwise, 8080.
-  // https://cloud.google.com/run/docs/reference/container-contract#port
-  final port = int.parse(Platform.environment['PORT'] ?? '8081');
-
-  // See https://pub.dev/documentation/shelf/latest/shelf/Cascade-class.html
   final cascade = Cascade()
       // If a corresponding file is not found, send requests to a `Router`
       .add(_router.call);
 
-  // See https://pub.dev/documentation/shelf/latest/shelf_io/serve.html
   final server = await shelf_io.serve(
-    // See https://pub.dev/documentation/shelf/latest/shelf/logRequests.html
-    logRequests()
-        // See https://pub.dev/documentation/shelf/latest/shelf/MiddlewareExtensions/addHandler.html
-        .addHandler(cascade.handler),
+    logRequests().addHandler(cascade.handler),
     InternetAddress.anyIPv4, // Allows external connections
-    port,
+    8081,
   );
 
-  print('Serving at http://${server.address.host}:${server.port}');
+  print('Serving at http://${server.address.host}:${server.port}/ssr?text=42');
 
-  // Used for tracking uptime of the demo server.
-  _watch.start();
+  runApp(const MaterialApp(home: Material(child: MainApp())));
+}
 
-  runApp(MaterialApp(home: Scaffold(body: const MainApp())));
+// Router instance to handler requests.
+final _router = shelf_router.Router()..get('/ssr', _ssrHandler);
+
+Future<Response> _ssrHandler(Request request) async {
+  final text = request.url.queryParameters['text'] ?? 'default';
+  final Uint8List? testImg = await imageService.renderWidget(text);
+
+  if (testImg == null) return Response.internalServerError();
+
+  final response = Response(
+    200,
+    headers: {
+      'Content-Type': 'image/png',
+      'Content-Length': testImg.length.toString(),
+    },
+    body: testImg,
+  );
+  return response;
 }
 
 class MainApp extends StatefulWidget {
@@ -58,23 +68,20 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  //Create an instance of ScreenshotController
   ScreenshotController screenshotController = ScreenshotController();
   @override
   void initState() {
     super.initState();
     imageService.renderWidgetCallback = (String text) async {
-      final result = await screenshotController.captureFromWidget(
-          InheritedTheme.captureAll(context, DemoWidget(text: text)));
-      return result;
+      return await screenshotController.captureFromWidget(
+        InheritedTheme.captureAll(context, DemoWidget(text: text)),
+      );
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: DemoWidget(text: '42'),
-    );
+    return const Text('The rendering is done in the background');
   }
 }
 
@@ -96,25 +103,4 @@ class DemoWidget extends StatelessWidget {
         ),
         child: Text("This is an invisible widget $text"));
   }
-}
-
-// Router instance to handler requests.
-final _router = shelf_router.Router()..get('/ssr', _ssrHandler);
-
-final _watch = Stopwatch();
-
-Future<Response> _ssrHandler(Request request) async {
-  final Uint8List? testImg = await imageService.renderWidget('42');
-
-  if (testImg == null) return Response.internalServerError();
-
-  final response = Response(
-    200,
-    headers: {
-      'Content-Type': 'image/png',
-      'Content-Length': testImg.length.toString(),
-    },
-    body: testImg,
-  );
-  return response;
 }

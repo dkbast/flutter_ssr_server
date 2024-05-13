@@ -177,6 +177,7 @@ Future<Response> _ssrHandler(Request request) async {
   final y = double.tryParse(request.url.queryParameters['y'] ?? '');
 
   print('SSR: $width x $height at $x, $y');
+
   if (x != null && y != null) {
     GestureBinding.instance.handlePointerEvent(PointerDownEvent(
       position: Offset(x, y),
@@ -187,8 +188,6 @@ Future<Response> _ssrHandler(Request request) async {
     ));
   }
 
-  // This is necessary to ensure that the frame is drawn even if the
-  // server is in the background
   WidgetsBinding.instance.drawFrame();
 
   final Uint8List? testImg =

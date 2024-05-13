@@ -143,14 +143,6 @@
 /Users/damianbast/.pub-cache/hosted/pub.dev/meta-1.11.0/lib/meta.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/meta-1.11.0/lib/meta_meta.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/LICENSE
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/mime.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/bound_multipart_stream.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/char_code.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/default_extension_map.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/magic_number.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/mime_multipart_transformer.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/mime_shared.dart
-/Users/damianbast/.pub-cache/hosted/pub.dev/mime-1.0.4/lib/src/mime_type.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/path-1.9.0/LICENSE
 /Users/damianbast/.pub-cache/hosted/pub.dev/path-1.9.0/lib/path.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/path-1.9.0/lib/src/characters.dart
@@ -191,7 +183,6 @@
 /Users/damianbast/.pub-cache/hosted/pub.dev/shelf-1.4.1/lib/src/shelf_unmodifiable_map.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/shelf-1.4.1/lib/src/util.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/shelf_flutter_asset-0.0.4/LICENSE
-/Users/damianbast/.pub-cache/hosted/pub.dev/shelf_flutter_asset-0.0.4/lib/shelf_flutter_asset.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/shelf_router-1.1.4/LICENSE
 /Users/damianbast/.pub-cache/hosted/pub.dev/shelf_router-1.1.4/lib/shelf_router.dart
 /Users/damianbast/.pub-cache/hosted/pub.dev/shelf_router-1.1.4/lib/src/route.dart
@@ -920,7 +911,7 @@
 /Users/damianbast/fvm/versions/stable/packages/flutter_tools/lib/src/build_system/targets/icon_tree_shaker.dart
 /Users/damianbast/fvm/versions/stable/packages/flutter_tools/lib/src/build_system/targets/macos.dart
 /Users/damianbast/fvm/versions/stable/packages/flutter_tools/lib/src/build_system/targets/native_assets.dart
-/Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/DOES_NOT_EXIST_RERUN_FOR_WILDCARD456720006
+/Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/DOES_NOT_EXIST_RERUN_FOR_WILDCARD323639022
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/assets/.DS_Store
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/assets/favicon.png
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/assets/flutter.js
@@ -929,5 +920,5 @@
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/assets/main.dart.js
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/assets/manifest.json
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/assets/version.json
-/Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/lib/main_asset.dart
+/Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/lib/main.dart
 /Users/damianbast/src/github.com/dkbast/flutter_ssr_server/server_app/pubspec.yaml
