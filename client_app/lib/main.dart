@@ -53,20 +53,14 @@ class _MainAppState extends State<MainApp> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: GestureDetector(
-              onTapUp: (details) {
-                var position = details.globalPosition;
-                print('tap at $position');
-                tap(position.dx, position.dy);
-              },
-              child: image == null
-                  ? CircularProgressIndicator()
-                  : Image.memory(image!)),
-        ),
-      ),
-    );
+    return GestureDetector(
+        onTapUp: (details) {
+          var position = details.globalPosition;
+          print('tap at $position');
+          tap(position.dx, position.dy);
+        },
+        child: image == null
+            ? const CircularProgressIndicator()
+            : Image.memory(image!));
   }
 }

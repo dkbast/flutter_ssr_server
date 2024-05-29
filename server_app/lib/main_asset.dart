@@ -96,36 +96,19 @@ class _MainAppState extends State<MainApp> {
       final result = await screenshotController.capture();
       if (result == null) throw Exception('Failed to capture screenshot');
       return result;
-      /*
-       *final result = await screenshotController
-       *    .captureFromWidget(InheritedTheme.captureAll(
-       *        context,
-       *        InteractiveViewer(
-       *          child: SizedBox(
-       *              width: width.toDouble(),
-       *              height: height.toDouble(),
-       *              child: DemoWidget(text: '42')),
-       *        )));
-       *return result;
-       */
     };
   }
 
   @override
   Widget build(BuildContext context) {
     return InteractiveViewer(
-      constrained: false,
-      child: Screenshot(
-        controller: screenshotController,
-        child: SizedBox(
-          width: width.toDouble(),
-          height: height.toDouble(),
-          child: Counter(
-            key: counterKey,
-          ),
-        ),
-      ),
-    );
+        constrained: false,
+        child: Screenshot(
+            controller: screenshotController,
+            child: SizedBox(
+                width: width.toDouble(),
+                height: height.toDouble(),
+                child: const Counter())));
   }
 }
 
